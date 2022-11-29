@@ -20,11 +20,15 @@ typedef struct Player
 } Player;
 
 int screenGetUp();
-int mapSetUp();
+Room ** mapSetUp();
 Player * playerSetUp();
 int handleInput(int input, Player * player);
 int playerMove(int y, int x, Player * player);
 int checkPosition(int newY, int newX, Player * entity);
+
+/* Room Functions */
+Room * createRoom(int y, int x, int height, int width);
+int drawRoom(Room * room);
 
 int main ()
 {
@@ -55,28 +59,61 @@ int screenGetUp()
     return 0;
 }
 
-int mapSetUp()
+Room ** mapSetUp()
 {
-    mvprintw(13, 13, "#------#");
-    mvprintw(14, 13, "|......|");
-    mvprintw(15, 13, "|......|");
-    mvprintw(16, 13, "|......|");
-    mvprintw(17, 13, "|......|");
-    mvprintw(18, 13, "#------#");
-    
-    mvprintw(2, 40, "#------#");
-    mvprintw(3, 40, "|......|");
-    mvprintw(4, 40, "|......|");
-    mvprintw(5, 40, "|......|");
-    mvprintw(6, 40, "|......|");
-    mvprintw(7, 40, "#------#");
+    Room ** rooms;
+    rooms = malloc(sizeof(Room)*6);
 
-    mvprintw(10, 40, "#----------#");
-    mvprintw(11, 40, "|..........|");
-    mvprintw(12, 40, "|..........|");
-    mvprintw(13, 40, "|..........|");
-    mvprintw(14, 40, "|..........|");
-    mvprintw(15, 40, "#----------#");
+    rooms[0] = createRoom(13, 13, 6, 8);
+    drawRoom(rooms[0]);
+
+    rooms[1] = createRoom(2, 40, 6, 8);
+    drawRoom(rooms[1]);
+
+    rooms[2] = createRoom(10, 40, 6, 11);
+    drawRoom(rooms[2]);
+
+    return rooms;
+}
+
+Room * createRoom(int y, int x, int height, int width)
+{
+    Room * newRoom;
+    newRoom = malloc(sizeof(Room));
+    
+    newRoom->yAnchor = y;
+    newRoom->xAnchor = x;
+    newRoom->height = height;
+    newRoom->width = width;
+
+    return newRoom;
+}
+
+int drawRoom(Room * room)
+{
+    int x;
+    int y;
+
+    // draw top and bottom
+    for (x = room->xAnchor; x < room->xAnchor + room->width; x++)
+    {
+        mvprintw(room->yAnchor, x, "-"); // top
+        mvprintw(room->yAnchor + room->height, x, "-"); // bottom
+    }
+
+    // draw floor and side walls
+    for (y = room->yAnchor + 1; y < room->yAnchor + room->height; y++)
+    {
+        // draw side walls
+        mvprintw(y, room->xAnchor, "|");
+        mvprintw(y, room->xAnchor + room->width - 1, "|");
+        for (x = room->xAnchor + 1; x < room->xAnchor + room->width - 1; x++)
+        {
+            mvprintw(y, x, ".");
+        }
+    }
+
+    return 0;
 }
 
 Player * playerSetUp()
@@ -84,6 +121,8 @@ Player * playerSetUp()
     Player * newPlayer;
     newPlayer = malloc(sizeof(Player));
 
+    newPlayer->yPosition = 14;
+    newPlayer->xPosition = 14;
     newPlayer->health = 20;
 
     playerMove(14, 14, newPlayer);
