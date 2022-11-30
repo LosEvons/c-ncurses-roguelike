@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "rogue.h": "c",
+        "stdlib.h": "c"
+    }
+}
