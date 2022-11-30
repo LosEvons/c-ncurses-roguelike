@@ -15,7 +15,7 @@ Player * playerSetUp()
     return newPlayer;
 }
 
-Position * handleInput(int input, Player * player, char ** game_map)
+Position * handleInput(int input, Player * player)
 {
     Position * newPosition;
     newPosition = malloc(sizeof(Position));
@@ -80,6 +80,7 @@ int playerMove(Position * newPosition, Player * player, char ** game_map)
     char buffer[3]; // Might need to be a pointer or sumtin
 
     sprintf(buffer, "%c", game_map[player->position.y][player->position.x]);
+
 
     mvprintw(player->position.y, player->position.x, buffer);
 

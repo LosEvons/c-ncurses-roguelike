@@ -6,20 +6,18 @@ int main ()
     int ch;
     Position * newPosition;
 
-    char ** game_map;
+    Level * game_map;
 
     screenGetUp();
 
-    mapSetUp(); 
-
-    game_map = saveLevelPositions();
+    game_map = createLevel(1);
 
     player = playerSetUp();
 
     while((ch = getch()) != 'q')
     {
-        newPosition = handleInput(ch, player, game_map);
-        checkPosition(newPosition, player, game_map);
+        newPosition = handleInput(ch, player);
+        checkPosition(newPosition, player, game_map->tiles);
     }
     endwin();
 

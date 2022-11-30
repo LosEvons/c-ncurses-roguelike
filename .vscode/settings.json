@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "rogue.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "curses.h": "c"
     }
 }
