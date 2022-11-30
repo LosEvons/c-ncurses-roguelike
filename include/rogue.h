@@ -5,6 +5,15 @@
 #include <curses.h>
 #include <time.h>
 
+typedef struct GameMap
+{
+    char ** tiles;
+    int numberOfRooms;
+    int numberOfMonsters;
+    struct Room ** rooms;
+    struct Monster ** monsters;
+} GameMap;
+
 typedef struct Position {
     int x;
     int y;
@@ -29,11 +38,15 @@ typedef struct Player
 } Player;
 
 int screenGetUp();
+/* Level/Map Functions*/
 Room ** mapSetUp();
+char ** saveLevelPositions();
+
+/* Player Functions */
 Player * playerSetUp();
-int handleInput(int input, Player * player);
-int playerMove(int y, int x, Player * player);
-int checkPosition(int newY, int newX, Player * entity);
+Position * handleInput(int input, Player * player, char ** game_map);
+int playerMove(Position * newPosition, Player * player, char ** game_map);
+int checkPosition(Position * newPosition, Player * entity, char ** game_map);
 
 /* Room Functions */
 Room * createRoom(int y, int x, int height, int width);

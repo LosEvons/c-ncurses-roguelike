@@ -9,43 +9,44 @@ Player * playerSetUp()
     newPlayer->position.x = 14;
     newPlayer->health = 20;
 
-    playerMove(14, 14, newPlayer);
+    mvprintw(newPlayer->position.y, newPlayer->position.x, "@");
+    move(newPlayer->position.y, newPlayer->position.x);
 
     return newPlayer;
 }
 
-int handleInput(int input, Player * player)
+Position * handleInput(int input, Player * player, char ** game_map)
 {
-    int newY;
-    int newX;
+    Position * newPosition;
+    newPosition = malloc(sizeof(Position));
     switch (input)
     {
         // move up
         case 'w':
         case 'W':
-            newY = player->position.y - 1;
-            newX = player->position.x;
+            newPosition->y = player->position.y - 1;
+            newPosition->x = player->position.x;
             break;
         
         // move down
         case 'a':
         case 'A':
-            newY = player->position.y;
-            newX = player->position.x - 1;
+            newPosition->y = player->position.y;
+            newPosition->x = player->position.x - 1;
             break;
 
         // move left
         case 's':
         case 'S':
-            newY = player->position.y + 1;
-            newX = player->position.x;
+            newPosition->y = player->position.y + 1;
+            newPosition->x = player->position.x;
             break;
 
         // move right
         case 'd':
         case 'D':
-            newY = player->position.y;
-            newX = player->position.x + 1;
+            newPosition->y = player->position.y;
+            newPosition->x = player->position.x + 1;
             break;
 
         // default
@@ -53,19 +54,19 @@ int handleInput(int input, Player * player)
             break;
     }
 
-    checkPosition(newY, newX, player);
+    return newPosition;
 
 }
 
-int checkPosition(int newY, int newX, Player * player)
+int checkPosition(Position * newPosition, Player * player, char ** game_map)
 {
     int space;
-    switch(mvinch(newY, newX))
+    switch(mvinch(newPosition->y, newPosition->x))
     {
         case '.':
         case '#':
         case '+':
-            playerMove(newY, newX, player);
+            playerMove(newPosition, player, game_map);
             break;
         
         default:
@@ -74,12 +75,16 @@ int checkPosition(int newY, int newX, Player * player)
     }
 }
 
-int playerMove(int y, int x, Player * player)
+int playerMove(Position * newPosition, Player * player, char ** game_map)
 {
-    mvprintw(player->position.y, player->position.x, ".");
+    char buffer[3]; // Might need to be a pointer or sumtin
 
-    player->position.y = y;
-    player->position.x = x;
+    sprintf(buffer, "%c", game_map[player->position.y][player->position.x]);
+
+    mvprintw(player->position.y, player->position.x, buffer);
+
+    player->position.y = newPosition->y;
+    player->position.x = newPosition->x;
 
     mvprintw(player->position.y, player->position.x, "@");
     move(player->position.y, player->position.x);
