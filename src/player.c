@@ -6,15 +6,24 @@ Player * playerSetUp()
     newPlayer = malloc(sizeof(Player));
     newPlayer->position = malloc(sizeof(Position));
 
-    newPlayer->position->y = 14;
-    newPlayer->position->x = 14;
+    newPlayer->maxHealth = 20;
     newPlayer->health = 20;
     newPlayer->attack = 1;
+    newPlayer->gold = 0;
+    newPlayer->exp = 0;
 
-    mvprintw(newPlayer->position->y, newPlayer->position->x, "@");
-    move(newPlayer->position->y, newPlayer->position->x);
+    
 
     return newPlayer;
+}
+
+int placePlayer(Room ** rooms, Player * player)
+{
+    player->position->x = rooms[3]->position.x + 1;
+    player->position->y = rooms[3]->position.y + 1;
+
+    mvprintw(player->position->y, player->position->x, "@");
+    move(player->position->y, player->position->x);
 }
 
 Position * handleInput(int input, Player * player)
@@ -77,6 +86,7 @@ int checkPosition(Position * newPosition, Level * game_map)
         case 'G':
         case 'T':
             combat(player, getMonsterAt(newPosition, game_map->monsters), 1);
+            printGameHub(game_map);
         
         default:
             move(player->position->y, player->position->x);

@@ -3,13 +3,12 @@
 int addMonsters(Level * level)
 {
     int x;
-    int max_monsters = 6;
-    level->monsters = malloc(sizeof(Monster *) * max_monsters);
+    level->monsters = malloc(sizeof(Monster *) * MAX_MONSTERS);
     level->numberOfMonsters = 0;
 
     for (x = 0; x < level->numberOfRooms; x++)
     {
-        if (((rand() % 2) == 0) && (level->numberOfMonsters < max_monsters))
+        if (((rand() % 2) == 0) && (level->numberOfMonsters < MAX_MONSTERS))
         {
             level->monsters[level->numberOfMonsters] = selectMonster(level->level);
             setStartingPosition(level->monsters[level->numberOfMonsters], level->rooms[x]);
@@ -40,11 +39,11 @@ Monster * selectMonster(int level)
     switch (monster)
     {
         case 1: // spider
-            return createMonster('X', 2, 1, 1, 1, 1);
+            return createMonster('X', 2, 1, 1, 1, 1, 1, 1);
         case 2: // goblin
-            return createMonster('G', 5, 3, 1, 1, 2);
+            return createMonster('G', 5, 3, 1, 1, 2, 2, 2);
         case 3: // troll
-            return createMonster('T', 15, 5, 1, 1, 1);
+            return createMonster('T', 15, 5, 1, 1, 1, 3, 3);
     }
 }
 
@@ -57,6 +56,8 @@ Monster * selectMonster(int level)
     speed: 1
     defence: 1
     pathfinding: 1 (random)
+    exp-value: 1
+    gold-value: 1
 2 Goblin
     symbol: G
     levels: 1-5
@@ -65,6 +66,8 @@ Monster * selectMonster(int level)
     speed: 1
     defence: 1
     pathfinding: 2 (seeking)
+    exp-value: 2
+    gold-value: 2
 3 Troll
     symbol: T
     levels: 4-6
@@ -73,10 +76,12 @@ Monster * selectMonster(int level)
     speed: 1
     defence: 1
     pathfinding: 1 (random)
+    exp-value: 3
+    gold-value: 3
 */
 
 Monster * createMonster(
-    char symbol, int health, int attack, int speed, int defence, int pathfinding)
+    char symbol, int health, int attack, int speed, int defence, int pathfinding, int expValue, int goldValue)
 {
     Monster * newMonster;
     newMonster = malloc(sizeof(Monster));
@@ -88,6 +93,8 @@ Monster * createMonster(
     newMonster->defence = defence;
     newMonster->alive = 1;
     newMonster->pathfinding = pathfinding;
+    newMonster->expValue = expValue;
+    newMonster->goldValue = goldValue;
 
     sprintf(newMonster->string, "%c", newMonster->symbol);
 

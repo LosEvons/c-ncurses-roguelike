@@ -12,6 +12,8 @@ Level * createLevel(int level)
 
     newLevel->player = playerSetUp();
 
+    placePlayer(newLevel->rooms, newLevel->player);
+
     addMonsters(newLevel);
     
     return newLevel;
@@ -19,21 +21,15 @@ Level * createLevel(int level)
 
 Room ** roomSetUp()
 {
+    int x;
     Room ** rooms;
-    rooms = malloc(sizeof(Room)*6);
+    rooms = malloc(sizeof(Room)*MAX_ROOMS);
 
-    rooms[0] = createRoom(13, 13, 6, 8);
-    drawRoom(rooms[0]);
-
-    rooms[1] = createRoom(2, 40, 6, 8);
-    drawRoom(rooms[1]);
-
-    rooms[2] = createRoom(10, 40, 6, 12);
-    drawRoom(rooms[2]);
-
-    connectDoors(rooms[0]->doors[3], rooms[2]->doors[1]);
-    connectDoors(rooms[1]->doors[1], rooms[0]->doors[0]);
-    
+    for (x = 0; x < MAX_ROOMS; x++)
+    {
+        rooms[x] = createRoom(x);
+        drawRoom(rooms[x]);
+    }
 
     return rooms;
 }
@@ -41,18 +37,14 @@ Room ** roomSetUp()
 char ** saveLevelPositions()
 {
     int x, y;
-
-    int level_height = 25;
-    int level_width = 100;
-
     char ** tiles;
 
-    tiles = malloc(sizeof(char *) * level_height);
+    tiles = malloc(sizeof(char *) * LEVEL_HEIGHT);
 
-    for (y = 0; y < level_height; y++)
+    for (y = 0; y < LEVEL_HEIGHT; y++)
     {
-        tiles[y] = malloc(sizeof(char *) * level_width);
-        for(x = 0; x < level_width; x++)
+        tiles[y] = malloc(sizeof(char *) * LEVEL_WIDTH);
+        for(x = 0; x < LEVEL_WIDTH; x++)
         {
             tiles[y][x] = mvinch(y, x);
         }

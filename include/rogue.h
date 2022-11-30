@@ -5,6 +5,21 @@
 #include <curses.h>
 #include <time.h>
 
+/* level parameters */
+#define LEVEL_HEIGHT 25
+#define LEVEL_WIDTH 100
+
+/* room parameters */
+#define MIN_ROOM_WIDTH 5
+#define MIN_ROOM_HEIGHT 5
+#define MAX_ROOM_WIDTH 14
+#define MAX_ROOM_HEIGHT 7
+#define MAX_ROOMS 6
+
+/* entity parameters */
+#define MAX_MONSTERS 6
+
+/* typed structs */
 typedef struct Level
 {
     char ** tiles;
@@ -28,16 +43,16 @@ typedef struct Room
     int width;
 
     Position ** doors;
-
-    //Monster ** monsters;
-    //Item ** items;
 } Room;
 
 typedef struct Player
 {
     Position * position;
+    int maxHealth;
     int health;
     int attack;
+    int gold;
+    int exp;
 } Player;
 
 typedef struct Monster
@@ -50,10 +65,15 @@ typedef struct Monster
     int defence;
     int pathfinding;
     int alive;
+    int expValue;
+    int goldValue;
     Position * position;
 } Monster;
 
+/* Screen Functions */
 int screenSetUp();
+int printGameHub(Level * level);
+
 /* Level/Map Functions*/
 Level * createLevel();
 Room ** roomSetUp();
@@ -64,16 +84,20 @@ Player * playerSetUp();
 Position * handleInput(int input, Player * player);
 int playerMove(Position * newPosition, Player * player, char ** game_map);
 int checkPosition(Position * newPosition, Level * game_map);
+int placePlayer(Room ** rooms, Player * player);
 
 /* Room Functions */
-Room * createRoom(int y, int x, int height, int width);
+Room * createRoom(int grid);
 int drawRoom(Room * room);
 int connectDoors(Position * doorOne, Position * doorTwo);
 
 /* Monster Functions */
 int addMonsters(Level * level);
 Monster * selectMonster(int level);
-Monster * createMonster(char symbol, int health, int attack, int speed, int defence, int pathfinding);
+Monster * createMonster(
+    char symbol, int health, int attack, int speed, 
+    int defence, int pathfinding, int expValue, int goldValue
+    );
 int killMonster(Monster * monster);
 int setStartingPosition(Monster * monster, Room * room);
 int moveMonsters(Level * level);
